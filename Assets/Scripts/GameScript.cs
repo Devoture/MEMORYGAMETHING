@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour {
+public class GameScript : MonoBehaviour {
 	public SpriteRenderer[] colors;
 	public float timeLit;
 	public float waitBetweenFlash;
 	public List<int> sequence;
 	public Text scoreText;
+	public int finalScore;
+	
 	
 	private int colorPicker;
 	private int positionInSequence;
@@ -18,8 +20,12 @@ public class GameManager : MonoBehaviour {
 	private bool shouldBeLit;
 	private bool shouldBeDark;
 	private bool gameActive;
+	private GameManager gm;
+	
 
 	void Start () {
+		gm = FindObjectOfType<GameManager>();
+		gm.hasLost = false;
 		if(!PlayerPrefs.HasKey("HighScore")) {
 			PlayerPrefs.SetInt("HighScore", 0);
 		}
@@ -70,7 +76,6 @@ public class GameManager : MonoBehaviour {
 	public void ColorClicked(int buttonNum) {
 		if(gameActive) {
 			if(sequence[inputInSequence] == buttonNum) {
-				Debug.Log("Correct");
 				inputInSequence++;
 				if(inputInSequence >= sequence.Count) {
 					if(sequence.Count > PlayerPrefs.GetInt("HighScore")) {
@@ -88,6 +93,8 @@ public class GameManager : MonoBehaviour {
 				}
 			} else {
 				gameActive = false;
+				gm.hasLost = true;
+				finalScore = sequence.Count;
 			}
 		}
 	}

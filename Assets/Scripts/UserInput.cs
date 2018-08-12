@@ -6,11 +6,11 @@ public class UserInput : MonoBehaviour {
 	public int buttonNumber;
 
 	private SpriteRenderer spritecolor;
-	private GameManager gm;
+	private GameScript gs;
 	// Use this for initialization
 	void Start () {
 		spritecolor = GetComponent<SpriteRenderer>();
-		gm = FindObjectOfType<GameManager>();
+		gs = FindObjectOfType<GameScript>();
 	}
 	
 	// Update is called once per frame
@@ -27,6 +27,6 @@ public class UserInput : MonoBehaviour {
 	void OnMouseUp()
 	{
 		spritecolor.color = new Color(spritecolor.color.r, spritecolor.color.g, spritecolor.color.b, 0.5f);
-		gm.ColorClicked(buttonNumber);
+		gs.ColorClicked(buttonNumber);
 	}
 }
