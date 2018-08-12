@@ -9,10 +9,12 @@ public class GameManager : MonoBehaviour {
 	
 	private int colorPicker;
 	private int positionInSequence;
+	private int inputInSequence;
 	private float timeLitCounter;
 	private float waitBetweenCounter;
 	private bool shouldBeLit;
 	private bool shouldBeDark;
+	private bool gameActive;
 
 	void Start () {
 	
@@ -33,6 +35,7 @@ public class GameManager : MonoBehaviour {
 			waitBetweenCounter -= Time.deltaTime;
 			if(positionInSequence >= sequence.Count) {
 				shouldBeDark = false;
+				gameActive = true;
 			} else {
 				if(waitBetweenCounter < 0) {
 					colorPicker = Random.Range(0, colors.Length);
@@ -47,7 +50,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void Begin() {
+		sequence.Clear();
 		positionInSequence = 0;
+		inputInSequence = 0;
 		colorPicker = Random.Range(0, colors.Length);
 		sequence.Add(colorPicker);
 		colors[sequence[positionInSequence]].color = new Color(colors[sequence[positionInSequence]].color.r, colors[sequence[positionInSequence]].color.g, colors[sequence[positionInSequence]].color.b, 1f);
@@ -56,10 +61,23 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void ColorClicked(int buttonNum) {
-		if(colorPicker == buttonNum) {
-			Debug.Log("Correct");
-		} else {
-			Debug.Log("Incorrect");
+		if(gameActive) {
+			if(sequence[inputInSequence] == buttonNum) {
+				Debug.Log("Correct");
+				inputInSequence++;
+				if(inputInSequence >= sequence.Count) {
+					positionInSequence = 0;
+					inputInSequence = 0;
+					colorPicker = Random.Range(0, colors.Length);
+					sequence.Add(colorPicker);
+					colors[sequence[positionInSequence]].color = new Color(colors[sequence[positionInSequence]].color.r, colors[sequence[positionInSequence]].color.g, colors[sequence[positionInSequence]].color.b, 1f);
+					timeLitCounter = timeLit;
+					shouldBeLit = true;
+					gameActive = false;
+				}
+			} else {
+				gameActive = false;
+			}
 		}
 	}
 }
