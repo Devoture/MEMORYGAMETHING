@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 public class GameManager : MonoBehaviour {
 	public SpriteRenderer[] colors;
 	public float timeLit;
 	public float waitBetweenFlash;
 	public List<int> sequence;
+	public Text scoreText;
 	
 	private int colorPicker;
 	private int positionInSequence;
@@ -17,7 +20,10 @@ public class GameManager : MonoBehaviour {
 	private bool gameActive;
 
 	void Start () {
-	
+		if(!PlayerPrefs.HasKey("HighScore")) {
+			PlayerPrefs.SetInt("HighScore", 0);
+		}
+			scoreText.text = "Score: 0 - HighScore: " + PlayerPrefs.GetInt("HighScore");
 	}
 
 	void Update () {
@@ -39,7 +45,6 @@ public class GameManager : MonoBehaviour {
 			} else {
 				if(waitBetweenCounter < 0) {
 					colorPicker = Random.Range(0, colors.Length);
-					//sequence.Add(colorPicker);
 					colors[sequence[positionInSequence]].color = new Color(colors[sequence[positionInSequence]].color.r, colors[sequence[positionInSequence]].color.g, colors[sequence[positionInSequence]].color.b, 1f);
 					timeLitCounter = timeLit;
 					shouldBeLit = true;
@@ -58,6 +63,8 @@ public class GameManager : MonoBehaviour {
 		colors[sequence[positionInSequence]].color = new Color(colors[sequence[positionInSequence]].color.r, colors[sequence[positionInSequence]].color.g, colors[sequence[positionInSequence]].color.b, 1f);
 		timeLitCounter = timeLit;
 		shouldBeLit = true;
+		scoreText.text = "Score: 0 - HighScore: " + PlayerPrefs.GetInt("HighScore");
+
 	}
 
 	public void ColorClicked(int buttonNum) {
@@ -66,6 +73,10 @@ public class GameManager : MonoBehaviour {
 				Debug.Log("Correct");
 				inputInSequence++;
 				if(inputInSequence >= sequence.Count) {
+					if(sequence.Count > PlayerPrefs.GetInt("HighScore")) {
+						PlayerPrefs.SetInt("HighScore", sequence.Count);
+					}
+					scoreText.text = "Score: " + sequence.Count + " - HighScore: " + PlayerPrefs.GetInt("HighScore");
 					positionInSequence = 0;
 					inputInSequence = 0;
 					colorPicker = Random.Range(0, colors.Length);
