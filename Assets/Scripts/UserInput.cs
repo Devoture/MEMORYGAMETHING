@@ -27,6 +27,6 @@ public class UserInput : MonoBehaviour {
 	void OnMouseUp()
 	{
 		spritecolor.color = new Color(spritecolor.color.r, spritecolor.color.g, spritecolor.color.b, 0.5f);
-		gm.colorClicked(buttonNumber);
+		gm.ColorClicked(buttonNumber);
 	}
 }
